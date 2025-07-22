@@ -36,6 +36,8 @@ public class Main {
                         int taskNum = Integer.parseInt(sc.nextLine());
                         boolean ret = todo.delete(taskNum);
                         todo.printActionResult(ret, "Удалено!", "Ошибка удаления!");
+                    }catch(NumberFormatException e){
+                        System.out.println("Номер должен быть цифрой!");
                     } catch (ArrayIndexOutOfBoundsException e) {
                         System.out.println(e.getMessage());
                     }
