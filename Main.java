@@ -1,16 +1,57 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
+
 public class Main {
+
+    public static void printHelp() {
+        System.out.println("""
+                \nВыберите операцию:
+                0. Выход из программы
+                1. Добавить дело
+                2. Показать дела
+                3. Удалить дело по номеру
+                4. Удалить дело по названию
+                """);
+    }
+
+    public static void printList(List<String> list) {
+        System.out.println("Ваш список дел:");
+        if (list.isEmpty()) {
+            System.out.println("<Пусто>");
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                System.out.printf("%d. %s\n", i + 1, list.get(i));
+            }
+        }
+    }
+
+    public static boolean removeFromList(List<String> list, String taskName) {
+        if (list.contains(taskName)) {
+            Iterator<String> it = list.iterator();
+            while (it.hasNext()) {
+                String elem = it.next();
+                if (elem.equals(taskName)) {
+                    it.remove();
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
 
-        Todo todo = new Todo(Todo.MIN_CAPACITY);
-
+        List<String> todoList = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
 
         boolean isRunning = true;
         while (isRunning) {
 
-            todo.printActionsHelp();
+            printHelp();
             System.out.print("Ваш выбор: ");
             String action = sc.nextLine();
 
@@ -20,51 +61,45 @@ public class Main {
                     break;
                 case "1":
                     System.out.print("Введите название задачи: ");
-                    try {
-                        boolean ret = todo.add(sc.nextLine());
-                        todo.printActionResult(ret, "Добавлено!", "Ошибка добавления!");
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(e.getMessage());
-                    }
+                    todoList.add(sc.nextLine());
+                    System.out.println("Добавлено!");
+                    printList(todoList);
                     break;
                 case "2":
-                    todo.print();
+                    printList(todoList);
                     break;
                 case "3":
                     System.out.print("Введите номер для удаления: ");
-                    try {
-                        int taskNum = Integer.parseInt(sc.nextLine());
-                        boolean ret = todo.delete(taskNum);
-                        todo.printActionResult(ret, "Удалено!", "Ошибка удаления!");
-                    } catch (NumberFormatException e) {
-                        System.out.println("Номер должен быть цифрой!");
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println(e.getMessage());
+                    int taskNum = Integer.parseInt(sc.nextLine());
+                    if (!todoList.isEmpty() && taskNum <= todoList.size() && taskNum >= 0) {
+                        todoList.remove(taskNum - 1);
+                        System.out.println("Удалено!");
+                        printList(todoList);
+                    } else {
+                        System.out.println("Ошибка удаления!");
                     }
                     break;
                 case "4":
                     System.out.print("Введите задачу для удаления: ");
-                    try {
-                        String task = sc.nextLine();
-                        boolean ret = todo.delete(task);
-                        todo.printActionResult(ret, "Удалено!", "Ошибка удаления!");
-                    } catch (NotExistsTodoTaskException e) {
-                        System.out.println(e.getMessage());
+                    String taskName = sc.nextLine();
+                    if (removeFromList(todoList, taskName)) {
+                        System.out.println("Удалено!");
+                        printList(todoList);
+                    } else {
+                        System.out.println("Ошибка удаления!");
                     }
-                    break;
-                case "5":
-                    System.out.print("Введите ключевое слово для удаления: ");
-                    String keyword = sc.nextLine();
-                    int countDeleted = todo.deleteByKeyword(keyword);
-                    String okMsg = String.format("Удалено дел: %d!", countDeleted);
-                    todo.printActionResult(countDeleted > 0, okMsg, "Дела не найдены!");
                     break;
                 default:
                     System.out.println("Неизвестная команда!");
             }
+
+
         }
+
         sc.close();
         System.out.println("Программа завершила работу!");
     }
-
 }
+
+
+
