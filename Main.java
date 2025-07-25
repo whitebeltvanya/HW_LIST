@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -44,13 +43,13 @@ public class Main {
     }
 
     public static boolean removeByKeyword(List<String> list, String keyword) {
-            List<String> toSaveList = new ArrayList<>();
-            for (String elem : list) {
-                if (!elem.contains(keyword)) {
-                    toSaveList.add(elem);
-                }
+        List<String> toSaveList = new ArrayList<>();
+        for (String elem : list) {
+            if (!elem.contains(keyword)) {
+                toSaveList.add(elem);
             }
-            return list.retainAll(toSaveList);
+        }
+        return list.retainAll(toSaveList);
     }
 
     public static void main(String[] args) {
@@ -59,7 +58,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         boolean isRunning = true;
-        while(isRunning) {
+        while (isRunning) {
             printHelp();
             System.out.print("Ваш выбор: ");
             String action = sc.nextLine();
