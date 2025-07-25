@@ -14,6 +14,7 @@ public class Main {
                 2. Показать дела
                 3. Удалить дело по номеру
                 4. Удалить дело по названию
+                5. Удалить по ключевому слову
                 """);
     }
 
@@ -30,17 +31,26 @@ public class Main {
 
     public static boolean removeFromList(List<String> list, String taskName) {
         if (list.contains(taskName)) {
-            Iterator<String> it = list.iterator();
-            while (it.hasNext()) {
-                String elem = it.next();
+            List<String> toDeleteList = new ArrayList<>();
+            for (String elem : list) {
                 if (elem.equals(taskName)) {
-                    it.remove();
+                    toDeleteList.add(elem);
                 }
             }
-            return true;
+            return list.removeAll(toDeleteList);
         } else {
             return false;
         }
+    }
+
+    public static boolean removeByKeyword(List<String> list, String keyword) {
+            List<String> toSaveList = new ArrayList<>();
+            for (String elem : list) {
+                if (!elem.contains(keyword)) {
+                    toSaveList.add(elem);
+                }
+            }
+            return list.retainAll(toSaveList);
     }
 
     public static void main(String[] args) {
@@ -49,8 +59,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         boolean isRunning = true;
-        while (isRunning) {
-
+        while(isRunning) {
             printHelp();
             System.out.print("Ваш выбор: ");
             String action = sc.nextLine();
@@ -89,15 +98,25 @@ public class Main {
                         System.out.println("Ошибка удаления!");
                     }
                     break;
+                case "5":
+                    System.out.print("Введите ключевое слово: ");
+                    String keyword = sc.nextLine();
+                    if (removeByKeyword(todoList, keyword)) {
+                        System.out.println("Удалено!");
+                        printList(todoList);
+                    } else {
+                        System.out.println("Ошибка удаления!");
+                    }
+                    break;
                 default:
                     System.out.println("Неизвестная команда!");
             }
-
 
         }
 
         sc.close();
         System.out.println("Программа завершила работу!");
+
     }
 }
 
